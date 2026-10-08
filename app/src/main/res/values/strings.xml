@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_name">Stone Clock</string>
+    <string name="widget_description">Кам’яний цифровий годинник</string>
+    <string name="wallpaper_name">Stone Clock · Живі шпалери</string>
+    <string name="wallpaper_description">Кам’яні цифри з актуальним часом і власним фоном</string>
+    <string name="weather_widget_name">Stone Clock · Погода</string>
+    <string name="weather_widget_description">Погодний персонаж і температура для обраного міста</string>
+    <string name="weather_widget_empty">Обери місто у Stone Clock</string>
+</resources>

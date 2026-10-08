@@ -1,0 +1,15 @@
+.gradle/
+/build/
+/app/build/
+/local.properties
+*.iml
+.idea/
+.kotlin/
+/gradle/gradle-daemon-jvm.properties
+*.apk
+*.aab
+*.jks
+*.keystore
+.env
+.env.*
+/release/

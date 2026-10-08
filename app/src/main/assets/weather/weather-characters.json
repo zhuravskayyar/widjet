@@ -1,0 +1,198 @@
+{
+  "sun": {
+    "file": "weather/characters/sun.png",
+    "width": 1254,
+    "height": 1254,
+    "removeBlackBackground": false,
+    "eyes": [
+      {
+        "x": 523.5,
+        "y": 453.5,
+        "rx": 12,
+        "ry": 12,
+        "moveX": 13,
+        "moveY": 7,
+        "clipTop": 0
+      },
+      {
+        "x": 926.5,
+        "y": 593.5,
+        "rx": 5,
+        "ry": 4,
+        "moveX": 3,
+        "moveY": 1.5,
+        "clipTop": 0
+      }
+    ]
+  },
+  "cloud": {
+    "file": "weather/characters/cloud.png",
+    "width": 1254,
+    "height": 1254,
+    "removeBlackBackground": false,
+    "eyes": [
+      {
+        "x": 622.5,
+        "y": 555.5,
+        "rx": 11,
+        "ry": 11,
+        "moveX": 12,
+        "moveY": 7,
+        "clipTop": 0
+      }
+    ]
+  },
+  "rain": {
+    "file": "weather/characters/rain.png",
+    "width": 1536,
+    "height": 1024,
+    "removeBlackBackground": false,
+    "eyes": [
+      {
+        "x": 719,
+        "y": 305,
+        "rx": 8.5,
+        "ry": 8.5,
+        "moveX": 10,
+        "moveY": 6,
+        "clipTop": 0
+      },
+      {
+        "x": 951,
+        "y": 367,
+        "rx": 8,
+        "ry": 8,
+        "moveX": 4,
+        "moveY": 2,
+        "clipTop": 365.5,
+        "clipSlope": -0.292
+      }
+    ]
+  },
+  "thunder": {
+    "file": "weather/characters/thunder.png",
+    "width": 1254,
+    "height": 1254,
+    "removeBlackBackground": true,
+    "eyes": [
+      {
+        "x": 500.5,
+        "y": 379,
+        "rx": 11,
+        "ry": 11,
+        "moveX": 12,
+        "moveY": 7,
+        "clipTop": 0
+      },
+      {
+        "x": 745,
+        "y": 424,
+        "rx": 11,
+        "ry": 11,
+        "moveX": 5,
+        "moveY": 3,
+        "clipTop": 426,
+        "clipSlope": -0.867
+      }
+    ]
+  },
+  "snow": {
+    "file": "weather/characters/snow.png",
+    "width": 1312,
+    "height": 1199,
+    "removeBlackBackground": true,
+    "eyes": [
+      {
+        "x": 591,
+        "y": 477,
+        "rx": 11,
+        "ry": 11,
+        "moveX": 12,
+        "moveY": 7,
+        "clipTop": 0
+      },
+      {
+        "x": 834,
+        "y": 554,
+        "rx": 11,
+        "ry": 10,
+        "moveX": 5,
+        "moveY": 3,
+        "clipTop": 552,
+        "clipSlope": -0.267
+      }
+    ]
+  },
+  "fog": {
+    "file": "weather/characters/fog.png",
+    "width": 1536,
+    "height": 1024,
+    "removeBlackBackground": true,
+    "eyes": [
+      {
+        "x": 759,
+        "y": 425,
+        "rx": 13,
+        "ry": 13,
+        "moveX": 7,
+        "moveY": 3,
+        "clipTop": 416,
+        "clipSlope": 0.059
+      },
+      {
+        "x": 982,
+        "y": 488,
+        "rx": 11,
+        "ry": 10,
+        "moveX": 4,
+        "moveY": 2,
+        "clipTop": 486,
+        "clipSlope": 0.067
+      }
+    ]
+  },
+  "wind": {
+    "file": "weather/characters/wind.png",
+    "width": 1536,
+    "height": 1024,
+    "removeBlackBackground": true,
+    "eyes": [
+      {
+        "x": 718,
+        "y": 362,
+        "rx": 9,
+        "ry": 9,
+        "moveX": 10,
+        "moveY": 6,
+        "clipTop": 0
+      },
+      {
+        "x": 898,
+        "y": 401,
+        "rx": 5,
+        "ry": 5,
+        "moveX": 2,
+        "moveY": 1,
+        "clipTop": 401.5,
+        "clipSlope": -0.35714285714285715
+      }
+    ]
+  },
+  "moon": {
+    "file": "weather/characters/moon.png",
+    "width": 1448,
+    "height": 1086,
+    "removeBlackBackground": true,
+    "eyes": [
+      {
+        "x": 626,
+        "y": 464.5,
+        "rx": 8.5,
+        "ry": 8.5,
+        "moveX": 10,
+        "moveY": 6,
+        "clipTop": 0
+      }
+    ]
+  }
+}

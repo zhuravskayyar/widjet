@@ -1,0 +1,84 @@
+name: Android APK and updates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Java 17
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@0b6dd653ba04f4f93bf581ec31e66cbd7dcb644d # v4
+      - name: Restore the existing app signing identity
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          SIGNING_KEY_B64: ${{ secrets.STONE_CLOCK_KEYSTORE_B64 }}
+        shell: bash
+        run: |
+          test -n "$SIGNING_KEY_B64" || { echo 'STONE_CLOCK_KEYSTORE_B64 is missing'; exit 1; }
+          mkdir -p "$HOME/.android"
+          printf '%s' "$SIGNING_KEY_B64" | base64 --decode > "$HOME/.android/debug.keystore"
+          chmod 600 "$HOME/.android/debug.keystore"
+      - name: Build APK and check Android lint
+        shell: bash
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleRelease :app:lintDebug --console=plain \
+            -PappVersionCode="$((100 + GITHUB_RUN_NUMBER))" \
+            -PappVersionName="0.4.${GITHUB_RUN_NUMBER}"
+      - name: Prepare update metadata
+        run: python3 scripts/prepare_release.py
+      - name: Upload APK and metadata
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: stone-clock-release
+          path: release/
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Download the signed APK
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: stone-clock-release
+          path: release
+      - name: Publish a version for wireless app updates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          tag="v0.4.${GITHUB_RUN_NUMBER}"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$tag" release/stone-clock.apk release/update.json --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$tag" release/stone-clock.apk release/update.json \
+              --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest \
+              --title "Stone Clock ${tag}" --notes-file release/notes.md
+          fi

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/weather_widget_root"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:gravity="center"
+    android:padding="4dp" android:clickable="true" android:focusable="true">
+    <ImageView android:id="@+id/weather_widget_image"
+        android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:scaleType="fitCenter" android:contentDescription="@string/weather_widget_name" />
+    <TextView android:id="@+id/weather_widget_empty"
+        android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:gravity="center" android:textColor="#E8E2D8" android:textSize="14sp"
+        android:text="@string/weather_widget_empty" android:visibility="gone" />
+</LinearLayout>
