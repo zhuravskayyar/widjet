@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap
 internal data class EyeSpec(val x: Float, val y: Float, val rx: Float, val ry: Float,
     val moveX: Float, val moveY: Float, val clipTop: Float, val clipSlope: Float)
 internal data class CharacterArt(val bitmap: Bitmap, val eyes: List<EyeSpec>, val sourceWidth: Int, val sourceHeight: Int,
-    val contentBounds: RectF)
+    val contentBounds: RectF, val effects: WeatherEffectArt?)
 private data class TemperatureGlyph(val bitmap: Bitmap, val baseline: Float)
 
 /** Prepares artwork once, then shares identical drawing code across all three surfaces. */
@@ -25,6 +25,7 @@ internal class WeatherRenderer(context: Context) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private val rect = RectF()
     private val clip = Path()
+    private val effects = WeatherEffects()
     private val specs = assets.open("weather/weather-characters.json").bufferedReader().use { JSONObject(it.readText()) }
     private val characters = ConcurrentHashMap<WeatherCondition, CharacterArt>()
     private var glyphs: Map<Char, TemperatureGlyph>? = null
@@ -50,8 +51,9 @@ internal class WeatherRenderer(context: Context) {
         }
         // Only the originally painted pupils are covered; the eye whites and outlines keep their source texture.
         eyes.forEach { clearPupil(bitmap, it, bitmap.width.toFloat() / sourceWidth, bitmap.height.toFloat() / sourceHeight) }
-        characters[condition] = CharacterArt(bitmap, eyes, sourceWidth, sourceHeight,
-            contentBounds(bitmap, sourceWidth, sourceHeight))
+        val content = contentBounds(bitmap, sourceWidth, sourceHeight)
+        val effectArt = config.optJSONArray("effects")?.let { effects.prepare(bitmap, sourceWidth, sourceHeight, it) }
+        characters[condition] = CharacterArt(bitmap, eyes, sourceWidth, sourceHeight, content, effectArt)
         prepareGlyphs()
     }
 
@@ -66,10 +68,10 @@ internal class WeatherRenderer(context: Context) {
         return RectF(left, top, left + art.sourceWidth * fit, top + art.sourceHeight * fit)
     }
 
-    fun drawStatic(canvas: Canvas, bounds: RectF, snapshot: WeatherSnapshot) {
+    fun drawStatic(canvas: Canvas, bounds: RectF, snapshot: WeatherSnapshot, animated: Boolean = false) {
         val art = characters[snapshot.condition] ?: return
         val character = characterBounds(bounds, snapshot.condition)
-        canvas.drawBitmap(art.bitmap, null, character, paint)
+        canvas.drawBitmap(if (animated) art.effects?.base ?: art.bitmap else art.bitmap, null, character, paint)
         val sprites = glyphs ?: return
         val display = snapshot.temperatureDisplay
         val artScale = character.width() / art.sourceWidth
@@ -82,6 +84,22 @@ internal class WeatherRenderer(context: Context) {
         val left = character.left + art.contentBounds.right * artScale + bounds.width() * 0.018f
         drawTemperature(canvas, display, left + rawWidth * scale / 2f,
             bounds.centerY() - (top + bottom) / 2f, height, maxWidth)
+    }
+
+    fun drawAnimation(canvas: Canvas, bounds: RectF, snapshot: WeatherSnapshot, frame: WeatherAnimationFrame) {
+        val art = characters[snapshot.condition] ?: return
+        art.effects?.let { effectArt ->
+            val character = characterBounds(bounds, snapshot.condition)
+            canvas.save()
+            canvas.translate(character.left, character.top)
+            val scale = character.width() / art.sourceWidth
+            canvas.scale(scale, scale)
+            // The temperature and face remain stable; moving details stay inside the original silhouette bounds.
+            canvas.clipRect(art.contentBounds)
+            effects.draw(canvas, effectArt, art.contentBounds, snapshot, frame.uptimeMillis)
+            canvas.restore()
+        }
+        drawPupils(canvas, bounds, snapshot.condition, frame.gaze)
     }
 
     fun drawPupils(canvas: Canvas, bounds: RectF, condition: WeatherCondition, gaze: Gaze) {

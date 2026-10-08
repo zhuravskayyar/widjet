@@ -19,7 +19,7 @@ import dev.stoneclock.clock.WallpaperClockRenderer
 import dev.stoneclock.clock.millisUntilNextMinute
 import dev.stoneclock.settings.ClockSettings
 import dev.stoneclock.settings.SettingsRepository
-import dev.stoneclock.weather.GazeAnimation
+import dev.stoneclock.weather.WeatherAnimation
 import dev.stoneclock.weather.WeatherRenderer
 import dev.stoneclock.weather.WeatherRepository
 import dev.stoneclock.weather.WeatherSnapshot
@@ -47,7 +47,7 @@ class StoneClockWallpaperService : WallpaperService() {
         private val clockRenderer = WallpaperClockRenderer(this@StoneClockWallpaperService)
         private val weatherRenderer = WeatherRenderer(this@StoneClockWallpaperService)
         private val weatherRepository = WeatherRepository.get(this@StoneClockWallpaperService)
-        private val gaze = GazeAnimation()
+        private val animation = WeatherAnimation()
         private var settings = ClockSettings()
         private var settingsLoaded = false
         private var weather: WeatherSnapshot? = null
@@ -59,7 +59,10 @@ class StoneClockWallpaperService : WallpaperService() {
         private var scene: Bitmap? = null
         private var sceneDirty = true
         private val debug = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
-        private val minuteTick = Runnable { invalidateScene("minute") }
+        private val minuteTick = Runnable {
+            if (settings.weatherEnabled) weatherRepository.refreshInBackground()
+            invalidateScene("minute")
+        }
         private val animationWake = Runnable { requestFrame() }
         private val animationFrame = Choreographer.FrameCallback {
             framePending = false
@@ -183,14 +186,14 @@ class StoneClockWallpaperService : WallpaperService() {
                         val stableCanvas = Canvas(cached)
                         clockRenderer.draw(stableCanvas, width, height, settings, LocalTime.now(), background)
                         if (settings.weatherEnabled && snapshot != null) {
-                            weatherRenderer.drawStatic(stableCanvas, weatherWallpaperBounds(width, height, settings), snapshot)
+                            weatherRenderer.drawStatic(stableCanvas, weatherWallpaperBounds(width, height, settings), snapshot, animated = true)
                         }
                         sceneDirty = false
                     }
                     canvas.drawBitmap(cached, 0f, 0f, null)
                     if (settings.weatherEnabled && snapshot != null) {
-                        weatherRenderer.drawPupils(canvas, weatherWallpaperBounds(width, height, settings),
-                            snapshot.condition, gaze.sample(SystemClock.uptimeMillis()))
+                        weatherRenderer.drawAnimation(canvas, weatherWallpaperBounds(width, height, settings),
+                            snapshot, animation.sample(SystemClock.uptimeMillis()))
                     }
                 } finally { holder.unlockCanvasAndPost(canvas) }
             }
@@ -203,7 +206,7 @@ class StoneClockWallpaperService : WallpaperService() {
                 framePending = false
                 return
             }
-            val wait = gaze.nextDelay(SystemClock.uptimeMillis())
+            val wait = animation.nextDelay(SystemClock.uptimeMillis(), weather!!.condition)
             if (wait <= 16L) requestFrame() else handler.postDelayed(animationWake, wait)
         }
 

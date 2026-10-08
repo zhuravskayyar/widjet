@@ -10,8 +10,8 @@
         "y": 453.5,
         "rx": 12,
         "ry": 12,
-        "moveX": 13,
-        "moveY": 7,
+        "moveX": 22,
+        "moveY": 12,
         "clipTop": 0
       },
       {
@@ -19,8 +19,8 @@
         "y": 593.5,
         "rx": 5,
         "ry": 4,
-        "moveX": 3,
-        "moveY": 1.5,
+        "moveX": 5.1,
+        "moveY": 2.55,
         "clipTop": 0
       }
     ]
@@ -36,8 +36,8 @@
         "y": 555.5,
         "rx": 11,
         "ry": 11,
-        "moveX": 12,
-        "moveY": 7,
+        "moveX": 22,
+        "moveY": 12,
         "clipTop": 0
       }
     ]
@@ -53,8 +53,8 @@
         "y": 305,
         "rx": 8.5,
         "ry": 8.5,
-        "moveX": 10,
-        "moveY": 6,
+        "moveX": 22,
+        "moveY": 12,
         "clipTop": 0
       },
       {
@@ -62,10 +62,165 @@
         "y": 367,
         "rx": 8,
         "ry": 8,
-        "moveX": 4,
-        "moveY": 2,
+        "moveX": 6.8,
+        "moveY": 3.4,
         "clipTop": 365.5,
         "clipSlope": -0.292
+      }
+    ],
+    "effects": [
+      {
+        "bounds": [
+          438,
+          568,
+          524,
+          728
+        ],
+        "seed": [
+          500,
+          680
+        ],
+        "motion": "rain",
+        "period": 1100,
+        "phase": 0.0,
+        "mask": "blue",
+        "startY": 580
+      },
+      {
+        "bounds": [
+          552,
+          606,
+          638,
+          762
+        ],
+        "seed": [
+          613,
+          718
+        ],
+        "motion": "rain",
+        "period": 1179,
+        "phase": 0.173,
+        "mask": "blue",
+        "startY": 622
+      },
+      {
+        "bounds": [
+          638,
+          687,
+          739,
+          877
+        ],
+        "seed": [
+          710,
+          825
+        ],
+        "motion": "rain",
+        "period": 1258,
+        "phase": 0.346,
+        "mask": "blue",
+        "startY": 693
+      },
+      {
+        "bounds": [
+          745,
+          661,
+          803,
+          773
+        ],
+        "seed": [
+          785,
+          739
+        ],
+        "motion": "rain",
+        "period": 1337,
+        "phase": 0.5189999999999999,
+        "mask": "blue",
+        "startY": 687
+      },
+      {
+        "bounds": [
+          819,
+          646,
+          919,
+          832
+        ],
+        "seed": [
+          893,
+          777
+        ],
+        "motion": "rain",
+        "period": 1416,
+        "phase": 0.692,
+        "mask": "blue",
+        "startY": 674
+      },
+      {
+        "bounds": [
+          981,
+          611,
+          1080,
+          801
+        ],
+        "seed": [
+          1054,
+          752
+        ],
+        "motion": "rain",
+        "period": 1495,
+        "phase": 0.865,
+        "mask": "blue",
+        "startY": 630
+      },
+      {
+        "bounds": [
+          474,
+          702,
+          576,
+          889
+        ],
+        "seed": [
+          550,
+          838
+        ],
+        "motion": "rain",
+        "period": 1574,
+        "phase": 0.03799999999999981,
+        "mask": "blue",
+        "startY": 622
+      },
+      {
+        "bounds": [
+          728,
+          790,
+          827,
+          977
+        ],
+        "seed": [
+          800,
+          925
+        ],
+        "motion": "rain",
+        "period": 1653,
+        "phase": 0.21099999999999985,
+        "mask": "blue",
+        "startY": 687
+      },
+      {
+        "bounds": [
+          910,
+          746,
+          993,
+          904
+        ],
+        "seed": [
+          971,
+          852
+        ],
+        "motion": "rain",
+        "period": 1732,
+        "phase": 0.3839999999999999,
+        "mask": "blue",
+        "startY": 668
       }
     ]
   },
@@ -80,8 +235,8 @@
         "y": 379,
         "rx": 11,
         "ry": 11,
-        "moveX": 12,
-        "moveY": 7,
+        "moveX": 22,
+        "moveY": 12,
         "clipTop": 0
       },
       {
@@ -89,10 +244,87 @@
         "y": 424,
         "rx": 11,
         "ry": 11,
-        "moveX": 5,
-        "moveY": 3,
+        "moveX": 8.5,
+        "moveY": 5,
         "clipTop": 426,
         "clipSlope": -0.867
+      }
+    ],
+    "effects": [
+      {
+        "bounds": [
+          138,
+          708,
+          324,
+          1012
+        ],
+        "seed": [
+          215,
+          845
+        ],
+        "motion": "lightning",
+        "period": 3400,
+        "phase": 0.0
+      },
+      {
+        "bounds": [
+          228,
+          748,
+          536,
+          1130
+        ],
+        "seed": [
+          372,
+          888
+        ],
+        "motion": "lightning",
+        "period": 4083,
+        "phase": 0.217
+      },
+      {
+        "bounds": [
+          494,
+          800,
+          643,
+          1173
+        ],
+        "seed": [
+          571,
+          944
+        ],
+        "motion": "lightning",
+        "period": 4766,
+        "phase": 0.434
+      },
+      {
+        "bounds": [
+          658,
+          734,
+          908,
+          1228
+        ],
+        "seed": [
+          770,
+          959
+        ],
+        "motion": "lightning",
+        "period": 5449,
+        "phase": 0.651
+      },
+      {
+        "bounds": [
+          898,
+          752,
+          1105,
+          1084
+        ],
+        "seed": [
+          995,
+          881
+        ],
+        "motion": "lightning",
+        "period": 6132,
+        "phase": 0.868
       }
     ]
   },
@@ -107,8 +339,8 @@
         "y": 477,
         "rx": 11,
         "ry": 11,
-        "moveX": 12,
-        "moveY": 7,
+        "moveX": 22,
+        "moveY": 12,
         "clipTop": 0
       },
       {
@@ -116,10 +348,204 @@
         "y": 554,
         "rx": 11,
         "ry": 10,
-        "moveX": 5,
-        "moveY": 3,
+        "moveX": 8.5,
+        "moveY": 5,
         "clipTop": 552,
         "clipSlope": -0.267
+      }
+    ],
+    "effects": [
+      {
+        "bounds": [
+          388,
+          140,
+          460,
+          262
+        ],
+        "seed": [
+          418,
+          196
+        ],
+        "motion": "snow",
+        "period": 3500,
+        "phase": 0.0,
+        "travel": 110
+      },
+      {
+        "bounds": [
+          844,
+          138,
+          918,
+          260
+        ],
+        "seed": [
+          886,
+          194
+        ],
+        "motion": "snow",
+        "period": 3739,
+        "phase": 0.137,
+        "travel": 110
+      },
+      {
+        "bounds": [
+          288,
+          264,
+          342,
+          352
+        ],
+        "seed": [
+          314,
+          310
+        ],
+        "motion": "snow",
+        "period": 3978,
+        "phase": 0.274,
+        "travel": 110
+      },
+      {
+        "bounds": [
+          962,
+          264,
+          1019,
+          352
+        ],
+        "seed": [
+          992,
+          308
+        ],
+        "motion": "snow",
+        "period": 4217,
+        "phase": 0.41100000000000003,
+        "travel": 110
+      },
+      {
+        "bounds": [
+          124,
+          482,
+          222,
+          548
+        ],
+        "seed": [
+          174,
+          514
+        ],
+        "motion": "snow",
+        "period": 4456,
+        "phase": 0.548,
+        "travel": 110
+      },
+      {
+        "bounds": [
+          1080,
+          482,
+          1181,
+          548
+        ],
+        "seed": [
+          1130,
+          512
+        ],
+        "motion": "snow",
+        "period": 4695,
+        "phase": 0.685,
+        "travel": 110
+      },
+      {
+        "bounds": [
+          120,
+          630,
+          224,
+          696
+        ],
+        "seed": [
+          172,
+          666
+        ],
+        "motion": "snow",
+        "period": 4934,
+        "phase": 0.8220000000000001,
+        "travel": 110
+      },
+      {
+        "bounds": [
+          1076,
+          630,
+          1179,
+          696
+        ],
+        "seed": [
+          1130,
+          666
+        ],
+        "motion": "snow",
+        "period": 5173,
+        "phase": 0.9590000000000001,
+        "travel": 110
+      },
+      {
+        "bounds": [
+          274,
+          880,
+          367,
+          1013
+        ],
+        "seed": [
+          324,
+          950
+        ],
+        "motion": "snow",
+        "period": 5412,
+        "phase": 0.09600000000000009,
+        "travel": 90
+      },
+      {
+        "bounds": [
+          938,
+          880,
+          1025,
+          1010
+        ],
+        "seed": [
+          980,
+          950
+        ],
+        "motion": "snow",
+        "period": 5651,
+        "phase": 0.2330000000000001,
+        "travel": 90
+      },
+      {
+        "bounds": [
+          424,
+          956,
+          489,
+          1071
+        ],
+        "seed": [
+          460,
+          1020
+        ],
+        "motion": "snow",
+        "period": 5890,
+        "phase": 0.3700000000000001,
+        "travel": 90
+      },
+      {
+        "bounds": [
+          802,
+          958,
+          861,
+          1075
+        ],
+        "seed": [
+          830,
+          1020
+        ],
+        "motion": "snow",
+        "period": 6129,
+        "phase": 0.5070000000000001,
+        "travel": 90
       }
     ]
   },
@@ -134,8 +560,8 @@
         "y": 425,
         "rx": 13,
         "ry": 13,
-        "moveX": 7,
-        "moveY": 3,
+        "moveX": 18,
+        "moveY": 7,
         "clipTop": 416,
         "clipSlope": 0.059
       },
@@ -144,8 +570,8 @@
         "y": 488,
         "rx": 11,
         "ry": 10,
-        "moveX": 4,
-        "moveY": 2,
+        "moveX": 6.8,
+        "moveY": 3.4,
         "clipTop": 486,
         "clipSlope": 0.067
       }
@@ -162,8 +588,8 @@
         "y": 362,
         "rx": 9,
         "ry": 9,
-        "moveX": 10,
-        "moveY": 6,
+        "moveX": 22,
+        "moveY": 12,
         "clipTop": 0
       },
       {
@@ -171,10 +597,139 @@
         "y": 401,
         "rx": 5,
         "ry": 5,
-        "moveX": 2,
-        "moveY": 1,
+        "moveX": 3.4,
+        "moveY": 1.7,
         "clipTop": 401.5,
         "clipSlope": -0.35714285714285715
+      }
+    ],
+    "effects": [
+      {
+        "bounds": [
+          946,
+          162,
+          1247,
+          471
+        ],
+        "seed": [
+          1195,
+          325
+        ],
+        "motion": "gust",
+        "period": 4100,
+        "phase": 0.23
+      },
+      {
+        "bounds": [
+          1250,
+          362,
+          1437,
+          470
+        ],
+        "seed": [
+          1300,
+          420
+        ],
+        "motion": "wind",
+        "period": 2000,
+        "phase": 0.0,
+        "travel": 150
+      },
+      {
+        "bounds": [
+          1106,
+          444,
+          1219,
+          503
+        ],
+        "seed": [
+          1160,
+          475
+        ],
+        "motion": "wind",
+        "period": 2211,
+        "phase": 0.193,
+        "travel": 150
+      },
+      {
+        "bounds": [
+          1080,
+          544,
+          1197,
+          590
+        ],
+        "seed": [
+          1130,
+          566
+        ],
+        "motion": "wind",
+        "period": 2422,
+        "phase": 0.386,
+        "travel": 150
+      },
+      {
+        "bounds": [
+          636,
+          748,
+          727,
+          789
+        ],
+        "seed": [
+          687,
+          769
+        ],
+        "motion": "wind",
+        "period": 2633,
+        "phase": 0.579,
+        "travel": 150
+      },
+      {
+        "bounds": [
+          500,
+          842,
+          691,
+          969
+        ],
+        "seed": [
+          590,
+          918
+        ],
+        "motion": "wind",
+        "period": 2844,
+        "phase": 0.772,
+        "travel": 110
+      },
+      {
+        "bounds": [
+          1056,
+          784,
+          1243,
+          955
+        ],
+        "seed": [
+          1180,
+          910
+        ],
+        "motion": "wind",
+        "period": 3055,
+        "phase": 0.9650000000000001,
+        "travel": 110
+      },
+      {
+        "bounds": [
+          970,
+          896,
+          1045,
+          993
+        ],
+        "seed": [
+          1007,
+          962
+        ],
+        "motion": "wind",
+        "period": 3266,
+        "phase": 0.15799999999999992,
+        "travel": 110
       }
     ]
   },
@@ -189,8 +744,8 @@
         "y": 464.5,
         "rx": 8.5,
         "ry": 8.5,
-        "moveX": 10,
-        "moveY": 6,
+        "moveX": 22,
+        "moveY": 12,
         "clipTop": 0
       }
     ]

@@ -20,7 +20,7 @@ import dev.stoneclock.clock.millisUntilNextMinute
 import dev.stoneclock.settings.ClockSettings
 import dev.stoneclock.weather.WeatherRepository
 import dev.stoneclock.weather.WeatherRenderer
-import dev.stoneclock.weather.rememberGaze
+import dev.stoneclock.weather.rememberWeatherAnimation
 import dev.stoneclock.weather.weatherWallpaperBounds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -41,7 +41,7 @@ internal fun WallpaperPreview(settings: ClockSettings, modifier: Modifier = Modi
             value = true
         }
     }.value
-    val gaze = rememberGaze(settings.weatherEnabled && weatherReady)
+    val animation = rememberWeatherAnimation(snapshot?.condition, settings.weatherEnabled && weatherReady)
     val background = produceState<Bitmap?>(null, settings.backgroundImage) {
         value = withContext(Dispatchers.IO) { BackgroundImages.load(context, settings.backgroundImage) }
     }.value
@@ -56,8 +56,8 @@ internal fun WallpaperPreview(settings: ClockSettings, modifier: Modifier = Modi
             renderer.draw(canvas.nativeCanvas, size.width, size.height, settings, time, background)
             if (settings.weatherEnabled && weatherReady && snapshot != null) {
                 val bounds = weatherWallpaperBounds(size.width, size.height, settings)
-                weatherRenderer.drawStatic(canvas.nativeCanvas, bounds, snapshot)
-                weatherRenderer.drawPupils(canvas.nativeCanvas, bounds, snapshot.condition, gaze)
+                weatherRenderer.drawStatic(canvas.nativeCanvas, bounds, snapshot, animated = true)
+                weatherRenderer.drawAnimation(canvas.nativeCanvas, bounds, snapshot, animation)
             }
         }
     }

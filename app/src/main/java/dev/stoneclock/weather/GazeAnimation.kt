@@ -27,10 +27,10 @@ internal class GazeAnimation(private val random: Random = Random.Default) {
         phase = (phase + 1) % 6
         from = to
         val duration = when (phase) {
-            0 -> { to = Gaze(); random.nextLong(2_000, 4_500) }
-            1, 3 -> { to = Gaze(random.nextFloat() * 1.8f - 0.9f, random.nextFloat() * 0.6f - 0.3f); random.nextLong(800, 1_400) }
-            2, 4 -> random.nextLong(1_700, 3_500)
-            else -> { to = Gaze(); random.nextLong(850, 1_200) }
+            0 -> { to = Gaze(); random.nextLong(900, 2_000) }
+            1, 3 -> { to = Gaze(random.nextFloat() * 1.8f - 0.9f, random.nextFloat() * 0.8f - 0.4f); random.nextLong(260, 460) }
+            2, 4 -> random.nextLong(650, 1_500)
+            else -> { to = Gaze(); random.nextLong(300, 450) }
         }
         start = now
         end = now + duration

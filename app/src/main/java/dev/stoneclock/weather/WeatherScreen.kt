@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -63,6 +64,8 @@ internal fun WeatherScreen(settings: ClockSettings, onBack: () -> Unit,
     var searching by remember { mutableStateOf(false) }
     var results by remember { mutableStateOf(emptyList<WeatherLocation>()) }
     var searchError by remember { mutableStateOf<String?>(null) }
+    var showAnimations by remember { mutableStateOf(false) }
+    var animationCondition by remember { mutableStateOf(WeatherCondition.RAIN) }
     BackHandler(onBack = onBack)
     LaunchedEffect(repository) { WeatherUpdateService.ensureScheduled(context); repository.refresh() }
 
@@ -101,6 +104,20 @@ internal fun WeatherScreen(settings: ClockSettings, onBack: () -> Unit,
         }
         state.error?.let { BasicText(it, style = TextStyle(color = Color(0xFFE4A998), fontSize = 13.sp)) }
         if (state.location != null) SettingsActionButton(if (state.refreshing) "Оновлюю…" else "Оновити погоду", enabled = !state.refreshing) { scope.launch { repository.refresh(force = true) } }
+        SettingsActionButton(if (showAnimations) "Закрити перегляд анімацій" else "Переглянути анімації") { showAnimations = !showAnimations }
+        if (showAnimations) {
+            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                WeatherCondition.entries.forEach { condition ->
+                    BasicText(condition.label, Modifier.background(
+                        if (condition == animationCondition) Color(0xFF3B3022) else Color(0xFF171717), RoundedCornerShape(10.dp)
+                    ).clickable { animationCondition = condition }.padding(horizontal = 14.dp, vertical = 12.dp),
+                        TextStyle(color = Primary, fontSize = 14.sp))
+                }
+            }
+            val demo = remember(animationCondition) { animationPreview(animationCondition) }
+            WeatherCharacter(demo, Modifier.fillMaxWidth().height(176.dp))
+            BasicText("Це перегляд анімацій. Погода на шпалерах залишається реальною.", style = TextStyle(color = Secondary, fontSize = 12.sp))
+        }
         SettingsActionButton("Додати віджет погоди", enabled = snapshot != null, onClick = onAddWidget)
         Row(Modifier.fillMaxWidth().clickable {
             draft = draft.copy(weatherEnabled = !draft.weatherEnabled); onSettingsChange(draft)
@@ -115,9 +132,24 @@ internal fun WeatherScreen(settings: ClockSettings, onBack: () -> Unit,
         SettingSlider("Положення погоди по вертикалі", String.format(Locale.ROOT, "%+.0f", draft.weatherOffsetY), draft.weatherOffsetY, -240f..240f,
             onValueChange = { draft = draft.copy(weatherOffsetY = it) }, onValueChangeFinished = { onSettingsChange(draft) })
         SettingsActionButton("Встановити живі шпалери") { onSetWallpaper(draft) }
-        BasicText("У системному вікні обери екран блокування. Очі анімуються, поки екран увімкнений і шпалери видно.", style = TextStyle(color = Secondary, fontSize = 12.sp))
+        BasicText("У системному вікні обери екран блокування. Очі й погодні ефекти анімуються, поки екран увімкнений і шпалери видно. Віджет головного екрана показує статичний малюнок.", style = TextStyle(color = Secondary, fontSize = 12.sp))
         BasicText("Погода: Open‑Meteo · міста: GeoNames", Modifier.clickable {
             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://open-meteo.com/")))
         }.padding(vertical = 10.dp), TextStyle(color = Secondary, fontSize = 12.sp))
     }
+}
+
+/** Preview data is never sent to the weather cache or wallpaper. */
+private fun animationPreview(condition: WeatherCondition): WeatherSnapshot {
+    val code = when (condition) {
+        WeatherCondition.SUN, WeatherCondition.MOON, WeatherCondition.WIND -> 0
+        WeatherCondition.CLOUD -> 3
+        WeatherCondition.RAIN -> 63
+        WeatherCondition.THUNDER -> 95
+        WeatherCondition.SNOW -> 73
+        WeatherCondition.FOG -> 45
+    }
+    return WeatherSnapshot(WeatherLocation("preview", "Перегляд анімацій", "", 0.0, 0.0),
+        if (condition == WeatherCondition.SNOW) -4.0 else 15.0, code, condition != WeatherCondition.MOON,
+        if (condition == WeatherCondition.WIND) 45.0 else 10.0, 0L, 0L)
 }

@@ -25,7 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 @Composable
-internal fun rememberGaze(enabled: Boolean = true): Gaze {
+internal fun rememberWeatherAnimation(condition: WeatherCondition?, enabled: Boolean = true): WeatherAnimationFrame {
     val owner = LocalContext.current as? LifecycleOwner
     var visible by remember(owner) { mutableStateOf(owner == null || owner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) }
     DisposableEffect(owner) {
@@ -33,13 +33,13 @@ internal fun rememberGaze(enabled: Boolean = true): Gaze {
         owner?.lifecycle?.addObserver(observer)
         onDispose { owner?.lifecycle?.removeObserver(observer) }
     }
-    val animation = remember { GazeAnimation() }
-    return produceState(Gaze(), visible, enabled) {
-        if (!visible || !enabled) return@produceState
+    val animation = remember { WeatherAnimation() }
+    return produceState(WeatherAnimationFrame(), visible, enabled, condition) {
+        if (!visible || !enabled || condition == null) return@produceState
         while (true) {
             withFrameNanos { value = animation.sample(SystemClock.uptimeMillis()) }
-            val wait = animation.nextDelay(SystemClock.uptimeMillis())
-            if (wait > 16L) delay(wait)
+            val wait = animation.nextDelay(SystemClock.uptimeMillis(), condition)
+            if (wait > 16L) delay(wait - 16L)
         }
     }.value
 }
@@ -53,13 +53,13 @@ internal fun WeatherCharacter(snapshot: WeatherSnapshot, modifier: Modifier = Mo
         withContext(Dispatchers.IO) { renderer.prepare(snapshot.condition) }
         value = true
     }.value
-    val gaze = rememberGaze()
+    val animation = rememberWeatherAnimation(snapshot.condition, ready)
     Canvas(modifier.semantics { contentDescription = "${snapshot.location.name}, ${snapshot.condition.label}, ${snapshot.temperatureDisplay} Цельсія" }) {
         if (ready) drawIntoCanvas { composeCanvas ->
             val canvas = composeCanvas.nativeCanvas
             val bounds = RectF(0f, 0f, size.width, size.height)
-            renderer.drawStatic(canvas, bounds, snapshot)
-            renderer.drawPupils(canvas, bounds, snapshot.condition, gaze)
+            renderer.drawStatic(canvas, bounds, snapshot, animated = true)
+            renderer.drawAnimation(canvas, bounds, snapshot, animation)
         }
     }
 }
