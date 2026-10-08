@@ -28,6 +28,10 @@ android {
         }
     }
 
+    signingConfigs.getByName("debug").apply {
+        providers.environmentVariable("STONE_CLOCK_KEYSTORE_PATH").orNull?.let { storeFile = file(it) }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

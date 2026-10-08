@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.core.content.FileProvider
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -78,7 +79,8 @@ internal class AppUpdater private constructor(context: Context) {
                     if (latest != null && latest.versionCode > it.currentCode && apkFile(latest).isFile) UpdatePhase.READY else UpdatePhase.IDLE) }
             } catch (cancelled: CancellationException) {
                 mutableState.update { it.copy(phase = previous) }; throw cancelled
-            } catch (_: Exception) {
+            } catch (error: Exception) {
+                logFailure("check", error)
                 mutableState.update { it.copy(phase = previous, error = "Не вдалося перевірити оновлення. Перевір інтернет і спробуй ще раз.") }
             }
         }.also { it.start() }
@@ -94,7 +96,8 @@ internal class AppUpdater private constructor(context: Context) {
                 mutableState.update { it.copy(phase = UpdatePhase.READY, progress = 100) }
             } catch (cancelled: CancellationException) {
                 mutableState.update { it.copy(phase = UpdatePhase.IDLE) }; throw cancelled
-            } catch (_: Exception) {
+            } catch (error: Exception) {
+                logFailure("download", error)
                 mutableState.update { it.copy(phase = UpdatePhase.IDLE,
                     error = "Не вдалося отримати перевірений APK. Спробуй завантажити оновлення ще раз.") }
             }
@@ -126,7 +129,8 @@ internal class AppUpdater private constructor(context: Context) {
     private fun download(release: AppRelease) {
         check(directory.isDirectory || directory.mkdirs())
         check(directory.usableSpace > release.size + 10_000_000)
-        val partial = File(directory, "${release.versionCode}.part")
+        // Android's archive parser requires an .apk extension even before the verified file is promoted.
+        val partial = File(directory, "${release.versionCode}.partial.apk")
         val connection = connection(release.apkUrl)
         try {
             check(connection.responseCode == 200 && connection.url.protocol == "https")
@@ -159,18 +163,18 @@ internal class AppUpdater private constructor(context: Context) {
 
     @Suppress("DEPRECATION")
     private fun verify(file: File, release: AppRelease) {
-        check(file.length() == release.size)
+        check(file.length() == release.size) { "APK size mismatch" }
         val digest = MessageDigest.getInstance("SHA-256")
         file.inputStream().use { input ->
             val buffer = ByteArray(32_768)
             while (true) { val count = input.read(buffer); if (count < 0) break; digest.update(buffer, 0, count) }
         }
-        check(digest.digest().joinToString("") { "%02x".format(it) } == release.sha256)
+        check(digest.digest().joinToString("") { "%02x".format(it) } == release.sha256) { "APK digest mismatch" }
         val flags = if (Build.VERSION.SDK_INT >= 28) PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES
-        val archive = checkNotNull(app.packageManager.getPackageArchiveInfo(file.path, flags))
-        check(archive.packageName == app.packageName && versionCode(archive) == release.versionCode && archive.versionName == release.versionName)
+        val archive = checkNotNull(app.packageManager.getPackageArchiveInfo(file.path, flags)) { "APK cannot be parsed" }
+        check(archive.packageName == app.packageName && versionCode(archive) == release.versionCode && archive.versionName == release.versionName) { "APK package/version mismatch" }
         val current = app.packageManager.getPackageInfo(app.packageName, flags)
-        check(signers(archive) == signers(current) && signers(current).isNotEmpty())
+        check(signers(archive) == signers(current) && signers(current).isNotEmpty()) { "APK signing certificate mismatch" }
     }
 
     @Suppress("DEPRECATION")
@@ -182,6 +186,11 @@ internal class AppUpdater private constructor(context: Context) {
     }
 
     private fun apkFile(release: AppRelease) = File(directory, "stone-clock-${release.versionCode}.apk")
+    private fun logFailure(operation: String, error: Exception) {
+        // Do not log redirect URLs: release downloads contain temporary signed query parameters.
+        val frame = error.stackTrace.firstOrNull { it.className.startsWith("dev.stoneclock.updates") }
+        Log.w("StoneClockUpdates", "$operation failed: ${error.javaClass.simpleName} at $frame")
+    }
     private fun connection(url: String) = (URL(url).openConnection() as HttpURLConnection).apply {
         connectTimeout = 15_000; readTimeout = 30_000
         setRequestProperty("User-Agent", "StoneClock/${mutableState.value.currentName}")
